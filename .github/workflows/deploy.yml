@@ -50,6 +50,7 @@ jobs:
           target: "/home/ubuntu/app"
           strip_components: 2
 
+
       - name: Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
