@@ -40,16 +40,15 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      - name: Transfer Files to EC2
+      - name: Transfer Jar to EC2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          # 쉼표(,)로 구분해서 여러 파일을 보냅니다.
-          source: "./build/libs/*.jar,./deploy.sh"
+          source: "./build/libs/*.jar"
           target: "/home/ubuntu/app"
-          strip_components: 2 # build/libs/ 껍데기 벗기기 위해 (deploy.sh는 그냥 감)
+          strip_components: 2
 
       - name: Deploy
         uses: appleboy/ssh-action@v1.0.3
@@ -58,6 +57,5 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
-            # 전송된 위치(/home/ubuntu/app)에 있는 스크립트 실행
-            chmod +x /home/ubuntu/app/deploy.sh
-            /home/ubuntu/app/deploy.sh
+            chmod +x /home/ubuntu/deploy.sh
+            /home/ubuntu/deploy.sh
